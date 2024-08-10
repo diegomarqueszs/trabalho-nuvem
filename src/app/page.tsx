@@ -1,4 +1,4 @@
-import { Form } from "@/components/form";
+import { CreateConsumerForm } from "@/components/create-consumer-form";
 import { Table } from "@/components/table";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
         </main>
         <aside className="w-96 bg-zinc-950 border-l border-zinc-700 p-6">
           <h2 className="text-lg font-semibold">Add new customer</h2>
-          <Form />
+          <CreateConsumerForm />
         </aside>
       </div>
     </div>
