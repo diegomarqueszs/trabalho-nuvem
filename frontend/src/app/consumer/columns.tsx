@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Copy, MoreHorizontal, Trash, UserPen } from "lucide-react";
 
 export type Consumer = {
   id: string;
@@ -87,7 +87,7 @@ export const columns: ColumnDef<Consumer>[] = [
       const consumer = row.original
 
       return (
-        <DropdownMenu>
+        <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
@@ -99,11 +99,18 @@ export const columns: ColumnDef<Consumer>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(consumer.cpf)}
             >
+              <Copy size={22} className='w-4 h-5 mr-2'/>
               Copy consumer cpf
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View consumer</DropdownMenuItem>
-            <DropdownMenuItem>Delete consumer</DropdownMenuItem>
+            <DropdownMenuItem>
+              <UserPen size={22} className='w-4 h-5 mr-2'/>
+              Edit consumer
+              </DropdownMenuItem>
+            <DropdownMenuItem className="bg-red-500 text-slate-100">
+              <Trash size={22} className='w-4 h-5 mr-2'/>
+              Delete consumer
+              </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
