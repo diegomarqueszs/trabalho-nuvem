@@ -1,5 +1,5 @@
 "use client"
-import * as React from "react"
+import * as React from "react";
 
 import {
     ColumnDef,
@@ -11,7 +11,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
     Table,
@@ -20,11 +20,13 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, UserPlus } from 'lucide-react';
+import { CreateConsumerForm } from "./create-consumer-form";
+import { Dialog, DialogTrigger } from './ui/dialog';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -38,6 +40,7 @@ export function DataTable<TData, TValue>({
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [rowSelection, setRowSelection] = React.useState({})
+    const [filterValue, setFilterValue] = React.useState<string>("")
 
     const table = useReactTable({
         data,
@@ -56,26 +59,46 @@ export function DataTable<TData, TValue>({
         onRowSelectionChange: setRowSelection,
     })
 
+    const handleFilterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        table.getColumn("name")?.setFilterValue(filterValue);
+    }
+
     return (
-        <div>
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter names or email..."
-                    value={((table.getColumn("name")?.getFilterValue() as string)) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
+        <div className='pb-6 max-w-7xl mx-auto space-y-4'>
+            <h1 className="text-3xl font-bold text-zinc-900">Customers</h1>
+            <div className='flex items-center justify-between'>
+                <form className='flex items-center gap-2' onSubmit={handleFilterSubmit}>
+                    <Input
+                        placeholder="Filter names or email..."
+                        value={filterValue}
+                        onChange={(event) => setFilterValue(event.target.value)}
+                        className="max-w-sm"
+                    />
+                    <Button type='submit' variant={'outline'}>
+                        <Search size={16} className='w-4 h-3 mr-2' />
+                        Search
+                    </Button>
+                </form>
+
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button type='submit'>
+                            <UserPlus size={24} className='w-4 h-5 mr-2' />
+                            New consumer
+                        </Button>
+                    </DialogTrigger>
+                    <CreateConsumerForm></CreateConsumerForm>
+                </Dialog>
             </div>
             <div className="rounded-md border">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className='bg-gray-700 '>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="hover:bg-gray-700" >
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} className="text-slate-50">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -113,10 +136,10 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-            <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected.
-            </div>
+                <div className="flex-1 text-sm text-muted-foreground">
+                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                </div>
                 <Button
                     variant="outline"
                     size="sm"
@@ -133,7 +156,6 @@ export function DataTable<TData, TValue>({
                 >
                     Next
                 </Button>
-         
             </div>
         </div>
     )
