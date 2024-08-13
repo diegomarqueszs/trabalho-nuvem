@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi.middleware.cors import CORSMiddleware
 
 # Configuração do banco de dados
 DATABASE_URL = "mysql+pymysql://root:my-secret-pw@localhost/trabalhofinal"
@@ -29,6 +30,15 @@ class ClienteModel(Base):
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Configuração do CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Modelo Pydantic para validação de dados
 class ClienteBase(BaseModel):
@@ -122,4 +132,16 @@ def buscar_clientes(nome: Optional[str] = None, cpf: Optional[str] = None, db: S
     if cpf:
         query = query.filter(ClienteModel.cpf.ilike(f"%{cpf}%"))
     
+    return query.all()
+
+
+@app.get("/clientes/busca2/", response_model=List[Cliente])
+def buscar_clientes2(q: Optional[str] = None, db: Session = Depends(get_db)):
+    if q is None:
+        raise HTTPException(status_code=400, detail="Forneça pelo menos um parâmetro de busca")
+    
+    query = db.query(ClienteModel)
+    if q:
+        query = query.filter(ClienteModel.nome.ilike(f"%{q}%") | ClienteModel.cpf.ilike(f"%{q}%"))
+        
     return query.all()
