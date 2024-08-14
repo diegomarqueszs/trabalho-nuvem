@@ -9,7 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 
 # Configuração do banco de dados
-DATABASE_URL = "mysql+pymysql://root:my-secret-pw@localhost/trabalhofinal"
+DATABASE_URL = "mysql+pymysql://root:batman22@localhost/trabalhofinal"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -122,26 +122,12 @@ def excluir_cliente(cliente_id: int, db: Session = Depends(get_db)):
 
 # Rota para buscar clientes por nome e/ou CPF
 @app.get("/clientes/busca/", response_model=List[Cliente])
-def buscar_clientes(nome: Optional[str] = None, cpf: Optional[str] = None, db: Session = Depends(get_db)):
-    if nome is None and cpf is None:
+def buscar_clientes2(search: Optional[str] = None, db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    if search is None:
         raise HTTPException(status_code=400, detail="Forneça pelo menos um parâmetro de busca")
     
     query = db.query(ClienteModel)
-    if nome:
-        query = query.filter(ClienteModel.nome.ilike(f"%{nome}%"))
-    if cpf:
-        query = query.filter(ClienteModel.cpf.ilike(f"%{cpf}%"))
-    
-    return query.all()
-
-
-@app.get("/clientes/busca2/", response_model=List[Cliente])
-def buscar_clientes2(q: Optional[str] = None, db: Session = Depends(get_db)):
-    if q is None:
-        raise HTTPException(status_code=400, detail="Forneça pelo menos um parâmetro de busca")
-    
-    query = db.query(ClienteModel)
-    if q:
-        query = query.filter(ClienteModel.nome.ilike(f"%{q}%") | ClienteModel.cpf.ilike(f"%{q}%"))
+    if search:
+        query = query.filter(ClienteModel.nome.ilike(f"%{search}%") | ClienteModel.cpf.ilike(f"%{search}%"))
         
-    return query.all()
+    return query.offset(skip).limit(limit).all()
