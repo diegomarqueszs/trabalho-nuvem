@@ -1,3 +1,4 @@
+import { ConsumerProvider } from "@/api/context";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -14,7 +15,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-150 text-zinc-950 ">{children}</body>
+      <body className="bg-gray-150 text-zinc-950 ">
+      <ConsumerProvider>{children}</ConsumerProvider></body>
     </html>
   );
 }
