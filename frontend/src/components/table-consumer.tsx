@@ -5,17 +5,16 @@
 import { Search, UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '././ui/table';
-import { CreateConsumerForm } from './create-consumer-form';
 import { Button } from './ui/button';
 import { Dialog, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination';
 
 interface CreateConsumerFormValues {
-  fullName: string;
+  nome: string;
   emil: string;
   cpf: string;
-  dateOfBirth: string;
+  data_nascimento: string;
 
 }
 
@@ -57,7 +56,7 @@ export function TableConsumer() {
               New consumer
             </Button>
           </DialogTrigger>
-          <CreateConsumerForm></CreateConsumerForm>
+          {/* <CreateConsumerForm></CreateConsumerForm> */}
         </Dialog>
 
       </div>

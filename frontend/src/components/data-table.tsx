@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, UserPlus } from 'lucide-react';
-import { CreateConsumerForm } from "./create-consumer-form";
+import { ProfileForm } from "./consumer-form";
 import { Dialog, DialogTrigger } from './ui/dialog';
 
 interface DataTableProps<TData, TValue> {
@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
 
     const handleFilterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        table.getColumn("name")?.setFilterValue(filterValue);
+        table.getColumn("nome")?.setFilterValue(filterValue);
     }
 
     return (
@@ -88,7 +88,8 @@ export function DataTable<TData, TValue>({
                             New consumer
                         </Button>
                     </DialogTrigger>
-                    <CreateConsumerForm></CreateConsumerForm>
+                    {/* <CreateConsumerForm ></CreateConsumerForm> */}
+                    <ProfileForm></ProfileForm>
                 </Dialog>
             </div>
             <div className="rounded-md border">
