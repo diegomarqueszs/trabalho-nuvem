@@ -4,8 +4,22 @@ import { Consumer } from "./consumer";
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
-export async function getConsumers(): Promise<Consumer[]> {
-  const res = await fetch(`${API_BASE_URL}/clientes/`, { cache: 'no-store' });
+export async function getConsumers(search?: string, skip?: number, limit?: number): Promise<Consumer[]> {
+  const queryParams = [];
+
+  if (search && search?.trim().length > 0) {
+    queryParams.push(`search=${search}`);
+  }
+  if (skip) {
+    queryParams.push(`skip=${skip}`);
+  }
+  if (limit) {
+    queryParams.push(`limit=${limit}`);
+  }
+
+  const queryString = queryParams.length ? `/busca/?${queryParams.join('&')}` : '/';
+  const res = await fetch(`${API_BASE_URL}/clientes${queryString}`, { cache: 'no-store' });
+
   if (!res.ok) {
     throw new Error(`HTTP error! Status: ${res.status}`);
   }
@@ -13,6 +27,7 @@ export async function getConsumers(): Promise<Consumer[]> {
   const data: Consumer[] = await res.json();
   return data;
 }
+
 
 export async function updateConsumer(consumer: Consumer): Promise<void> {
   try {
@@ -76,7 +91,7 @@ export async function deleteConsumer(
 }
 
 
-export async function createConsumer(consumer: Consumer): Promise<void> {
+export async function createConsumer(consumer: Consumer): Promise<boolean> {
   try {
     const formattedConsumer = {
       ...consumer,
@@ -93,23 +108,8 @@ export async function createConsumer(consumer: Consumer): Promise<void> {
       body: JSON.stringify(formattedConsumer),
     });
 
-    if (res.status === 422 || res.status === 400) { 
-      toast.error("Usuário já existe!", {
-        description: `O usuário ${consumer.nome} já está cadastrado.`,
-        richColors: true,
-        className: 'bg-yellow-500 text-slate-100',
-        duration: 700,
-      });
-      return;
-    }
-
     if (!res.ok) {
-      toast.error(`Erro ao criar usuário. Status: ${res.status}`, {
-        richColors: true,
-        className: 'bg-red-500 text-slate-100',
-        duration: 700,
-      });
-      return;
+      throw new Error(`HTTP error! Status: ${res.status}`);
     }
 
     toast.success("Usuário criado com sucesso!", {
@@ -118,15 +118,16 @@ export async function createConsumer(consumer: Consumer): Promise<void> {
       className: 'bg-green-500 text-slate-100',
       duration: 700,
     });
+
+    return true; 
     
-  } catch (error) {
-    toast.error("Erro na solicitação.", {
-      description: "Houve um problema ao tentar criar o usuário.",
+  } catch (error: any) {
+    toast.error("Erro ao criar o usuário!", {
+      description: error.message || 'Erro desconhecido',
       richColors: true,
-      className: 'bg-red-500 text-slate-100',
-      duration: 700,
+      duration: 1000,
     });
-    console.error("Failed to create consumer:", error);
+    return false; 
   }
 }
 
