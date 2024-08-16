@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Copy, MoreHorizontal, Trash, UserPen } from "lucide-react";
+import { ArrowUpDown, Copy, Eye, MoreHorizontal, Trash, UserPen } from "lucide-react";
 
 export function getColumns(): ColumnDef<Consumer>[] {
   const { fetchData } = useConsumers();
@@ -43,7 +43,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Name
+            Nome
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -69,7 +69,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
     },
     {
       accessorKey: "data_nascimento",
-      header: "Date Of Birth",
+      header: "Data de nascimento",
       cell: ({ row }) => {
         const date = new Date(row.getValue("data_nascimento"))
         const formatted = date.toLocaleDateString();
@@ -83,7 +83,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
         const consumer = row.original;
 
         return (
-          <DropdownMenu >
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -91,12 +91,12 @@ export function getColumns(): ColumnDef<Consumer>[] {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(consumer.cpf)}
               >
                 <Copy size={22} className='w-4 h-5 mr-2'/>
-                Copy consumer cpf
+                Copiar CPF do cliente
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -105,8 +105,17 @@ export function getColumns(): ColumnDef<Consumer>[] {
                   // await updateConsumer(consumer.id, updatedData, fetchData);
                 }}
               >
+                <Eye  size={22} className='w-4 h-5 mr-2'/>
+                Visualizar dados do cliente
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  <ProfileForm></ProfileForm>
+                  // await updateConsumer(consumer.id, updatedData, fetchData);
+                }}
+              >
                 <UserPen size={22} className='w-4 h-5 mr-2'/>
-                Edit consumer
+                Editar cliente
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="bg-red-500 text-slate-100"
@@ -116,7 +125,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
                 }}
               >
                 <Trash size={22} className='w-4 h-5 mr-2'/>
-                Delete consumer
+                Deletar cliente
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
