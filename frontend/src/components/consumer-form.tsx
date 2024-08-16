@@ -21,7 +21,7 @@ import { DialogContent, DialogTitle } from "./ui/dialog";
 // Schema for validation
 const formSchema = z.object({
     nome: z.string().min(2, {
-        message: "Name must be at least 2 characters.",
+        message: "O nome deve ter no mínimo 2 caracteres.",
     }),
     cpf: z.string()
         .min(11, {
@@ -29,8 +29,8 @@ const formSchema = z.object({
         })
         .max(11)
         .transform((cpf) => cpf.replace(/[^\d]/g, '')), // Sanitize CPF
-    email: z.string().email(),
-    data_nascimento: z.date()
+    email: z.string().email('Email inválido'),
+    data_nascimento: z.date({ message: 'Data inválida' })
 })
 
 interface ProfileFormProps {
@@ -57,13 +57,18 @@ export function ProfileForm({ defaultValues, isEditing = false }: ProfileFormPro
 
     const { fetchData } = useConsumers();
 
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         try {
             if (isEditing) {
                 await updateConsumer({ ...values, id: defaultValues?.id });
+
             } else {
-                await createConsumer(values);
+                const success = await createConsumer(values);
+                if (success) {
+                    form.reset();
+                  } 
             }
             fetchData();
         } catch (error) {
@@ -71,7 +76,7 @@ export function ProfileForm({ defaultValues, isEditing = false }: ProfileFormPro
         }
     }
 
-    
+
     return (
         <DialogContent>
             <DialogTitle className='text-2xl text-center'>
