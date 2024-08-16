@@ -123,9 +123,6 @@ def excluir_cliente(cliente_id: int, db: Session = Depends(get_db)):
 # Rota para buscar clientes por nome e/ou CPF
 @app.get("/clientes/busca/", response_model=List[Cliente])
 def buscar_clientes2(search: Optional[str] = None, db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
-    if search is None:
-        raise HTTPException(status_code=400, detail="Forneça pelo menos um parâmetro de busca")
-    
     query = db.query(ClienteModel)
     if search:
         query = query.filter(ClienteModel.nome.ilike(f"%{search}%") | ClienteModel.cpf.ilike(f"%{search}%"))
