@@ -84,7 +84,6 @@ export function DataTable({
                 if(consumer && consumer.id)
                 await deleteConsumer(consumer.id, consumer.nome );
             }
-            // Fetch updated data after deletion
             const consumers = await getConsumers(filterValue);
             setData(consumers);
             setRowSelection({});

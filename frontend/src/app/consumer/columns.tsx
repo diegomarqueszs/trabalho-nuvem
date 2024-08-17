@@ -134,7 +134,11 @@ export function getColumns(): ColumnDef<Consumer>[] {
             <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
               <DialogContent>
                 {selectedConsumer && (
-                  <ProfileForm defaultValues={selectedConsumer} isEditing={true} />
+                  <ProfileForm
+                    defaultValues={selectedConsumer}
+                    isEditing={true}
+                    onClose={handleCloseDialog}
+                  />
                 )}
               </DialogContent>
             </Dialog>

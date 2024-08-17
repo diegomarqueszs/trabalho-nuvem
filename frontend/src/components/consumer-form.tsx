@@ -30,7 +30,7 @@ const formSchema = z.object({
         .max(11)
         .transform((cpf) => cpf.replace(/[^\d]/g, '')), // Sanitize CPF
     email: z.string().email('Email inválido'),
-    data_nascimento: z.date({ message: 'Data inválida' })
+    data_nascimento: z.date({ message: '' })
 })
 
 interface ProfileFormProps {
@@ -42,9 +42,10 @@ interface ProfileFormProps {
         data_nascimento?: Date;
     };
     isEditing?: boolean;
+    onClose?: () => void;
 }
 
-export function ProfileForm({ defaultValues, isEditing = false }: ProfileFormProps) {
+export function ProfileForm({ defaultValues, isEditing = false, onClose }: ProfileFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -53,22 +54,23 @@ export function ProfileForm({ defaultValues, isEditing = false }: ProfileFormPro
             email: defaultValues?.email || "",
             data_nascimento: defaultValues?.data_nascimento
         },
-    })
+    });
 
     const { fetchData } = useConsumers();
-
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         try {
             if (isEditing) {
-                await updateConsumer({ ...values, id: defaultValues?.id });
-
+                const success = await updateConsumer({ ...values, id: defaultValues?.id });
+                if (success && onClose !== undefined) {
+                    onClose(); 
+                }
             } else {
                 const success = await createConsumer(values);
                 if (success) {
                     form.reset();
-                  } 
+                }
             }
             fetchData();
         } catch (error) {

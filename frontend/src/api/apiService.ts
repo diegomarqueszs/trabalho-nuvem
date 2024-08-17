@@ -29,7 +29,7 @@ export async function getConsumers(search?: string, skip?: number, limit?: numbe
 }
 
 
-export async function updateConsumer(consumer: Consumer): Promise<void> {
+export async function updateConsumer(consumer: Consumer): Promise<boolean> {
   try {
     const formattedConsumer = {
       ...consumer,
@@ -64,18 +64,21 @@ export async function updateConsumer(consumer: Consumer): Promise<void> {
       throw new Error(`HTTP error! Status: ${res.status}`);
     }
 
-    toast.success("Consumer updated successfully!", {
+    toast.success("Cliente atualizado com sucesso!", {
       description: consumer.nome,
       richColors: true,
       className: 'bg-green-500 text-slate-100',
       duration: 700,
     });
 
+    return true;
+
   } catch (error) {
     console.error("Error updating consumer:", error);
-    // Optionally, handle additional cleanup or logging here
+    return false;
   }
 }
+
 
 export async function deleteConsumer(
   id: number,
