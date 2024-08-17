@@ -4,12 +4,26 @@ import { useConsumers } from "@/api/context";
 import { ProfileForm } from "@/components/consumer-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Copy, Eye, MoreHorizontal, Trash, UserPen } from "lucide-react";
+import { useState } from "react";
 
 export function getColumns(): ColumnDef<Consumer>[] {
   const { fetchData } = useConsumers();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedConsumer, setSelectedConsumer] = useState<Consumer | null>(null);
+
+  const handleOpenDialog = (consumer: Consumer) => {
+    setSelectedConsumer(consumer);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedConsumer(null);
+  };
 
   return [
     {
@@ -37,31 +51,27 @@ export function getColumns(): ColumnDef<Consumer>[] {
     },
     {
       accessorKey: "nome",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Nome
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
     },
     {
       accessorKey: "cpf",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            CPF
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          CPF
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
     },
     {
       accessorKey: "email",
@@ -71,10 +81,9 @@ export function getColumns(): ColumnDef<Consumer>[] {
       accessorKey: "data_nascimento",
       header: "Data de nascimento",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("data_nascimento"))
+        const date = new Date(row.getValue("data_nascimento"));
         const formatted = date.toLocaleDateString();
-
-        return <div className="font-medium">{formatted}</div>
+        return <div className="font-medium">{formatted}</div>;
       },
     },
     {
@@ -95,26 +104,20 @@ export function getColumns(): ColumnDef<Consumer>[] {
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(consumer.cpf)}
               >
-                <Copy size={22} className='w-4 h-5 mr-2'/>
+                <Copy size={22} className='w-4 h-5 mr-2' />
                 Copiar CPF do cliente
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={async () => {
-                  <ProfileForm></ProfileForm>
-                  // await updateConsumer(consumer.id, updatedData, fetchData);
-                }}
+                onClick={() => handleOpenDialog(consumer)}
               >
-                <Eye  size={22} className='w-4 h-5 mr-2'/>
+                <Eye size={22} className='w-4 h-5 mr-2' />
                 Visualizar dados do cliente
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={async () => {
-                  <ProfileForm></ProfileForm>
-                  // await updateConsumer(consumer.id, updatedData, fetchData);
-                }}
+                onClick={() => handleOpenDialog(consumer)}
               >
-                <UserPen size={22} className='w-4 h-5 mr-2'/>
+                <UserPen size={22} className='w-4 h-5 mr-2' />
                 Editar cliente
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -124,13 +127,20 @@ export function getColumns(): ColumnDef<Consumer>[] {
                   await fetchData();
                 }}
               >
-                <Trash size={22} className='w-4 h-5 mr-2'/>
+                <Trash size={22} className='w-4 h-5 mr-2' />
                 Deletar cliente
               </DropdownMenuItem>
             </DropdownMenuContent>
+            <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
+              <DialogContent>
+                {selectedConsumer && (
+                  <ProfileForm defaultValues={selectedConsumer} isEditing={true} />
+                )}
+              </DialogContent>
+            </Dialog>
           </DropdownMenu>
-        )
+        );
       },
     },
-  ]
+  ];
 }

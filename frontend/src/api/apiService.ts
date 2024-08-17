@@ -31,12 +31,19 @@ export async function getConsumers(search?: string, skip?: number, limit?: numbe
 
 export async function updateConsumer(consumer: Consumer): Promise<void> {
   try {
+    const formattedConsumer = {
+      ...consumer,
+      data_nascimento: consumer.data_nascimento 
+        ? format(new Date(consumer.data_nascimento), 'yyyy-MM-dd') 
+        : '',
+    };
+
     const res = await fetch(`${API_BASE_URL}/clientes/${consumer.id}/`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(consumer),
+      body: JSON.stringify(formattedConsumer),
     });
 
     if (!res.ok) {
