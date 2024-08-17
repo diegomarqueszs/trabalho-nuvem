@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Copy, Eye, MoreHorizontal, Trash, UserPen } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function getColumns(): ColumnDef<Consumer>[] {
   const { fetchData } = useConsumers();
@@ -114,7 +115,16 @@ export function getColumns(): ColumnDef<Consumer>[] {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(consumer.cpf)}
+                onClick={() => {
+                  navigator.clipboard.writeText(consumer.cpf);
+                  toast.info("CPF copiado com sucesso!", {
+                    description: consumer.cpf,
+                    richColors: true,
+                    className: 'bg-green-500 text-slate-100',
+                    duration: 700,
+                  });
+                }}
+
               >
                 <Copy size={22} className='w-4 h-5 mr-2' />
                 Copiar CPF do cliente
