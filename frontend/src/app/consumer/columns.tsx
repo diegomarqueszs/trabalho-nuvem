@@ -2,6 +2,7 @@ import { deleteConsumer } from "@/api/apiService";
 import { Consumer } from "@/api/consumer";
 import { useConsumers } from "@/api/context";
 import { ProfileForm } from "@/components/consumer-form";
+import { ShowConsumer } from "@/components/show-consumer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -13,7 +14,13 @@ import { useState } from "react";
 export function getColumns(): ColumnDef<Consumer>[] {
   const { fetchData } = useConsumers();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedConsumer, setSelectedConsumer] = useState<Consumer | null>(null);
+
+  const handleViewOpenDialog = (consumer: Consumer) => {
+    setSelectedConsumer(consumer);
+    setIsViewDialogOpen(true);
+  };
 
   const handleOpenDialog = (consumer: Consumer) => {
     setSelectedConsumer(consumer);
@@ -22,6 +29,11 @@ export function getColumns(): ColumnDef<Consumer>[] {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+    setSelectedConsumer(null);
+  };
+
+  const handleCloseViewDialog = () => {
+    setIsViewDialogOpen(false);
     setSelectedConsumer(null);
   };
 
@@ -109,7 +121,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleOpenDialog(consumer)}
+                onClick={() => handleViewOpenDialog(consumer)}
               >
                 <Eye size={22} className='w-4 h-5 mr-2' />
                 Visualizar dados do cliente
@@ -139,6 +151,13 @@ export function getColumns(): ColumnDef<Consumer>[] {
                     isEditing={true}
                     onClose={handleCloseDialog}
                   />
+                )}
+              </DialogContent>
+            </Dialog>
+            <Dialog open={isViewDialogOpen} onOpenChange={handleCloseViewDialog}>
+              <DialogContent>
+                {selectedConsumer && (
+                  <ShowConsumer consumer={selectedConsumer} />
                 )}
               </DialogContent>
             </Dialog>
