@@ -11,7 +11,7 @@
 ## Membros do grupo:
 - DIEGO DE SOUZA MARQUES **202111037** *(diego.marques1@estudante.ufla.br)*
 - RICARDO AUGUSTO SANTOS **202110173** *(ricardo.santos3@estudante.ufla.br)*
-- BRENO CARVALHO PEDROSO **202110174** *(breno.@estudante.ufla.br)*
+- BRENO CARVALHO PEDROSO **202110174** *(breno.pedroso@estudante.ufla.br)*
 
 ## Visão Geral
 
