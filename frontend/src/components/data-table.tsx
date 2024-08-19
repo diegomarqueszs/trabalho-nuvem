@@ -103,10 +103,10 @@ export function DataTable({
             <div className='flex items-center justify-between'>
                 <form className='flex items-center gap-2' onSubmit={handleFilterSubmit}>
                     <Input
-                        placeholder="Filter names or email..."
+                        placeholder="Filtre pelo nome ou cpf..."
                         value={filterValue}
                         onChange={(event) => setFilterValue(event.target.value)}
-                        className="max-w-sm"
+                        className="max-w-xs w-full"
                     />
                     <Button type='submit' variant={'outline'}>
                         <Search size={16} className='w-4 h-3 mr-2' />

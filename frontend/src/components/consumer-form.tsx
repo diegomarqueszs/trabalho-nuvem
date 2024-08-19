@@ -11,12 +11,21 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+
 import { Input } from "@/components/ui/input";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from 'date-fns';
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { DialogContent, DialogTitle } from "./ui/dialog";
+import { Calendar } from "./ui/calendar";
+import { DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 
 // Schema for validation
 const formSchema = z.object({
@@ -28,9 +37,9 @@ const formSchema = z.object({
             message: "CPF deve ter 11 digitos.",
         })
         .max(11)
-        .transform((cpf) => cpf.replace(/[^\d]/g, '')), // Sanitize CPF
+        .transform((cpf) => cpf.replace(/[^\d]/g, '')),
     email: z.string().email('Email inválido'),
-    data_nascimento: z.date({ message: '' })
+    data_nascimento: z.date({message: 'Data de nascimento inválida'}),
 })
 
 interface ProfileFormProps {
@@ -39,7 +48,7 @@ interface ProfileFormProps {
         nome: string;
         cpf: string;
         email: string;
-        data_nascimento?: Date;
+        data_nascimento: Date;
     };
     isEditing?: boolean;
     onClose?: () => void;
@@ -53,18 +62,19 @@ export function ProfileForm({ defaultValues, isEditing = false, onClose }: Profi
             cpf: defaultValues?.cpf || "",
             email: defaultValues?.email || "",
             data_nascimento: defaultValues?.data_nascimento
+                ? new Date(defaultValues.data_nascimento)
+                : undefined,
         },
     });
 
     const { fetchData } = useConsumers();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
         try {
             if (isEditing) {
                 const success = await updateConsumer({ ...values, id: defaultValues?.id });
                 if (success && onClose !== undefined) {
-                    onClose(); 
+                    onClose();
                 }
             } else {
                 const success = await createConsumer(values);
@@ -81,6 +91,7 @@ export function ProfileForm({ defaultValues, isEditing = false, onClose }: Profi
 
     return (
         <DialogContent>
+            <DialogDescription/>
             <DialogTitle className='text-2xl text-center'>
                 {isEditing ? 'Editar cliente' : 'Criar cliente'}
             </DialogTitle>
@@ -132,15 +143,37 @@ export function ProfileForm({ defaultValues, isEditing = false, onClose }: Profi
                             <FormItem className="flex flex-col">
                                 <FormLabel>Data de nascimento</FormLabel>
                                 <FormControl>
-                                    <input
-                                        type="date"
-                                        value={field.value ? format(new Date(field.value), "yyyy-MM-dd") : ""}
-                                        onChange={(e) => {
-                                            const selectedDate = e.target.value ? new Date(e.target.value) : undefined;
-                                            field.onChange(selectedDate);
-                                        }}
-                                        className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                                    />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "pl-3 text-left font-normal",
+                                                        !field.value && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    {field.value ? (
+                                                        format(new Date(field.value), 'yyyy-MM-dd') 
+                                                    ) : (
+                                                        <span>Escolha uma data</span>
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                disabled={(date) =>
+                                                    date > new Date() || date < new Date("1900-01-01")
+                                                }
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
