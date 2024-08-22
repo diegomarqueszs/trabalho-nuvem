@@ -1,12 +1,12 @@
 import { deleteConsumer } from "@/api/apiService";
 import { Consumer } from "@/api/consumer";
 import { useConsumers } from "@/api/context";
-import { ProfileForm } from "@/components/consumer-form";
-import { ShowConsumer } from "@/components/show-consumer";
+import { ConsumerForm } from "@/components/consumer-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ViewConsumer } from "@/components/view-consumer";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Copy, Eye, MoreHorizontal, Trash, UserPen } from "lucide-react";
 import { useState } from "react";
@@ -156,7 +156,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
             <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
               <DialogContent>
                 {selectedConsumer && (
-                  <ProfileForm
+                  <ConsumerForm
                     defaultValues={selectedConsumer}
                     isEditing={true}
                     onClose={handleCloseDialog}
@@ -167,7 +167,7 @@ export function getColumns(): ColumnDef<Consumer>[] {
             <Dialog open={isViewDialogOpen} onOpenChange={handleCloseViewDialog}>
               <DialogContent>
                 {selectedConsumer && (
-                  <ShowConsumer consumer={selectedConsumer} />
+                  <ViewConsumer consumer={selectedConsumer} />
                 )}
               </DialogContent>
             </Dialog>

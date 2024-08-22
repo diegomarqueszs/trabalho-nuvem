@@ -27,7 +27,7 @@ import { Consumer } from "@/api/consumer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, UserPlus, UsersRound } from 'lucide-react';
-import { ProfileForm } from "./consumer-form";
+import { ConsumerForm } from "./consumer-form";
 import { Dialog, DialogTrigger } from './ui/dialog';
 
 interface DataTableProps {
@@ -121,7 +121,7 @@ export function DataTable({
                             Novo cliente
                         </Button>
                     </DialogTrigger>
-                    <ProfileForm />
+                    <ConsumerForm />
                 </Dialog>)
 
                 :(<Button

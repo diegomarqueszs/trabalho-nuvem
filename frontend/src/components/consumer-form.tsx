@@ -27,7 +27,6 @@ import { z } from "zod";
 import { Calendar } from "./ui/calendar";
 import { DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 
-// Schema for validation
 const formSchema = z.object({
     nome: z.string().min(2, {
         message: "O nome deve ter no mínimo 2 caracteres.",
@@ -42,7 +41,7 @@ const formSchema = z.object({
     data_nascimento: z.date({message: 'Data de nascimento inválida'}),
 })
 
-interface ProfileFormProps {
+interface ConsumerFormProps {
     defaultValues?: {
         id?: number;
         nome: string;
@@ -54,7 +53,7 @@ interface ProfileFormProps {
     onClose?: () => void;
 }
 
-export function ProfileForm({ defaultValues, isEditing = false, onClose }: ProfileFormProps) {
+export function ConsumerForm({ defaultValues, isEditing = false, onClose }: ConsumerFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {

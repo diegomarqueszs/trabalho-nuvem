@@ -83,6 +83,7 @@ export async function updateConsumer(consumer: Consumer): Promise<boolean> {
 export async function deleteConsumer(
   id: number,
   nome: string,
+  mock: boolean = false
 ): Promise<void> {
 
   const res = await fetch(`${API_BASE_URL}/clientes/${id}/`, {
@@ -91,6 +92,7 @@ export async function deleteConsumer(
   if (!res.ok) {
     throw new Error(`HTTP error! Status: ${res.status}`);
   }
+  if(mock) return;
   toast.info("Usuário deletado com sucesso!", {
     description: nome,
     richColors: true,
@@ -101,7 +103,8 @@ export async function deleteConsumer(
 }
 
 
-export async function createConsumer(consumer: Consumer): Promise<boolean> {
+export async function createConsumer(consumer: Consumer, mock: boolean = false): Promise<boolean> {
+  if(mock) consumer.id = undefined;
   try {
     const formattedConsumer = {
       ...consumer,
@@ -122,21 +125,25 @@ export async function createConsumer(consumer: Consumer): Promise<boolean> {
       throw new Error(`HTTP error! Status: ${res.status}`);
     }
 
-    toast.success("Usuário criado com sucesso!", {
-      description: consumer.nome,
-      richColors: true,
-      className: 'bg-green-500 text-slate-100',
-      duration: 700,
-    });
+    if(!mock) {
+      toast.success("Usuário criado com sucesso!", {
+        description: consumer.nome,
+        richColors: true,
+        className: 'bg-green-500 text-slate-100',
+        duration: 700,
+      });
+    }
 
     return true; 
     
   } catch (error: any) {
-    toast.error("Erro ao criar o usuário!", {
-      description: error.message || 'Erro desconhecido',
-      richColors: true,
-      duration: 1000,
-    });
+    if(!mock) {
+      toast.error("Erro ao criar o usuário!", {
+        description: error.message || 'Erro desconhecido',
+        richColors: true,
+        duration: 1000,
+      });
+    }
     return false; 
   }
 }
