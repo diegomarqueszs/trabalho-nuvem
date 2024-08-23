@@ -1,4 +1,4 @@
-import { createConsumer, deleteConsumer, getConsumers } from "@/api/apiService";
+import { createConsumer, deleteConsumer, getAllConsumers } from "@/api/apiService";
 import { Consumer } from "@/api/consumer";
 import {
     Card,
@@ -30,7 +30,7 @@ function UserInfo({ name, email, avatarSrc }: { name: string; email: string; ava
 
 export function SideBar() {
     return (
-        <Card className="flex flex-col h-full">
+        <Card className="fixed flex flex-col h-full">
             <CardHeader>
                 <CardTitle>Controles de dados</CardTitle>
                 <CardDescription>Auxilia na criação de dados para testes</CardDescription>
@@ -39,7 +39,7 @@ export function SideBar() {
                 <div className="flex flex-col gap-3">
                     <Button className="justify-start gap-2" variant="outline" onClick={
                         async () => {
-                            const data = await getConsumers();
+                            const data = await getAllConsumers();
                             toast.loading("Limpando dados...");
                             for(const consumer of data) {
                                 if(consumer.id) await deleteConsumer(consumer.id, consumer.nome, true);

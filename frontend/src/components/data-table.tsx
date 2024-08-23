@@ -24,6 +24,7 @@ import {
 
 import { deleteConsumer, getConsumers } from "@/api/apiService";
 import { Consumer } from "@/api/consumer";
+import { useConsumers } from "@/api/context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, UserPlus, UsersRound } from 'lucide-react';
@@ -44,6 +45,7 @@ export function DataTable({
     const [rowSelection, setRowSelection] = React.useState({});
     const [filterValue, setFilterValue] = React.useState<string>("");
     const [data, setData] = React.useState<Consumer[]>(initialData);
+    const { consumers, nextPage, previousPage, hasMore, skip } = useConsumers();
 
     React.useEffect(() => {
         setData(initialData);
@@ -81,8 +83,8 @@ export function DataTable({
             const selectedRows = table.getSelectedRowModel().rows;
             for (const row of selectedRows) {
                 const consumer = row.original;
-                if(consumer && consumer.id)
-                await deleteConsumer(consumer.id, consumer.nome );
+                if (consumer && consumer.id)
+                    await deleteConsumer(consumer.id, consumer.nome);
             }
             const consumers = await getConsumers(filterValue);
             setData(consumers);
@@ -97,7 +99,7 @@ export function DataTable({
     return (
         <div className='pb-6 max-w-7xl mx-auto space-y-4'>
             <div className="flex items-center gap-3">
-                <UsersRound size={32}/>
+                <UsersRound size={32} />
                 <h1 className="text-4xl font-bold text-zinc-900">Clientes</h1>
             </div>
             <div className='flex items-center justify-between'>
@@ -114,7 +116,7 @@ export function DataTable({
                     </Button>
                 </form>
 
-                {!hasSelectedRows ? ( <Dialog>
+                {!hasSelectedRows ? (<Dialog>
                     <DialogTrigger asChild>
                         <Button type='submit'>
                             <UserPlus size={24} className='w-4 h-5 mr-2' />
@@ -124,14 +126,14 @@ export function DataTable({
                     <ConsumerForm />
                 </Dialog>)
 
-                :(<Button
-                    variant="destructive"
-                    disabled={!hasSelectedRows}
-                    onClick={handleDeleteSelected}
-                >
-                    Excluir clientes
-                </Button>
-                )}
+                    : (<Button
+                        variant="destructive"
+                        disabled={!hasSelectedRows}
+                        onClick={handleDeleteSelected}
+                    >
+                        Excluir clientes
+                    </Button>
+                    )}
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -183,16 +185,16 @@ export function DataTable({
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
+                    onClick={previousPage}
+                    disabled={skip === 0}
                 >
                     Voltar
                 </Button>
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
+                    onClick={nextPage}
+                    disabled={!hasMore}
                 >
                     Próximo
                 </Button>

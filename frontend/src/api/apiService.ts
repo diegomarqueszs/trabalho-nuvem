@@ -4,18 +4,14 @@ import { Consumer } from "./consumer";
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
-export async function getConsumers(search?: string, skip?: number, limit?: number): Promise<Consumer[]> {
+export async function getConsumers(search?: string, skip: number = 0, limit: number = 10): Promise<Consumer[]> {
   const queryParams = [];
 
   if (search && search?.trim().length > 0) {
     queryParams.push(`search=${search}`);
   }
-  if (skip) {
-    queryParams.push(`skip=${skip}`);
-  }
-  if (limit) {
-    queryParams.push(`limit=${limit}`);
-  }
+  queryParams.push(`skip=${skip}`);
+  queryParams.push(`limit=${limit + 1}`);
 
   const queryString = queryParams.length ? `/busca/?${queryParams.join('&')}` : '/';
   const res = await fetch(`${API_BASE_URL}/clientes${queryString}`, { cache: 'no-store' });
@@ -27,6 +23,18 @@ export async function getConsumers(search?: string, skip?: number, limit?: numbe
   const data: Consumer[] = await res.json();
   return data;
 }
+
+export async function getAllConsumers(): Promise<Consumer[]> {
+  const res = await fetch(`${API_BASE_URL}/clientes`, { cache: 'no-store' });
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! Status: ${res.status}`);
+  }
+
+  const data: Consumer[] = await res.json();
+  return data;
+}
+
 
 
 export async function updateConsumer(consumer: Consumer): Promise<boolean> {
