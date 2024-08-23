@@ -19,7 +19,7 @@ Este projeto é um sistema de gerenciamento de clientes desenvolvido com uma arq
 
 O frontend foi desenvolvido em **React** utilizando **TailwindCSS** para estilização e componentes do **Shadcn UI** para uma interface elegante e funcional. A hospedagem do frontend é realizada na **AWS EC2**, garantindo alta disponibilidade e desempenho.
 
-O backend foi implementado em **Python**, com a base de dados sendo gerenciada pelo **Amazon RDS**. Além disso, o sistema utiliza o **Amazon S3** para o armazenamento seguro de arquivos, como documentos e imagens relacionados aos clientes.
+O backend foi implementado em **Python** utilizando a bibleoteca **FastAPI**, com a base de dados sendo gerenciada pelo **Amazon RDS** para **MySQL**. 
 
 Este sistema é ideal para ser integrado em aplicações maiores ou para ser utilizado como um ponto de partida em projetos que demandem um gerenciamento eficiente de dados de clientes.
 
