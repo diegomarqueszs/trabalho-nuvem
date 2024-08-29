@@ -24,7 +24,7 @@ O backend foi implementado em **Python** utilizando a bibleoteca **FastAPI**, co
 Este sistema é ideal para ser integrado em aplicações maiores ou para ser utilizado como um ponto de partida em projetos que demandem um gerenciamento eficiente de dados de clientes.
 
 
-![image](https://github.com/user-attachments/assets/cc97e492-dc71-4868-b727-b932fe752113)
+![image]([https://github.com/user-attachments/assets/cc97e492-dc71-4868-b727-b932fe752113](https://imgur.com/a/dXtPOD0))
 
 
 ## Principais Funcionalidades
