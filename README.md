@@ -33,12 +33,12 @@ Este sistema é ideal para ser integrado em aplicações maiores ou para ser uti
 - **Consulta de Dados**: Exibe uma lista completa de clientes, com opções de pesquisa, filtragem e ordenação.
 - **Edição de Clientes**: Permite a atualização dos dados de clientes existentes de forma simples e eficiente.
 - **Exclusão de Clientes**: Possibilita a remoção de clientes com confirmação, garantindo segurança na operação.
-- **Integração com AWS**: Uso de serviços AWS como EC2 para hospedagem, RDS para banco de dados e S3 para armazenamento de arquivos.
+- **Integração com AWS**: Uso de serviços AWS como EC2 para hospedagem e RDS para banco de dados.
 
 ## Tecnologias Utilizadas
 
 - **Frontend**: React, TailwindCSS, Shadcn UI, hospedado na AWS EC2.
-- **Backend**: Python, Amazon RDS, Amazon S3.
+- **Backend**: FastAPI, Python, Amazon RDS.
 
 
 ![image](https://github.com/user-attachments/assets/647aec2a-f4b3-4de8-a400-6e2257a29318)
